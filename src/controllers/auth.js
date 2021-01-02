@@ -32,7 +32,7 @@ const signUp = async(req, res, next) => {
 
     }
     catch (error) {
-        next()
+        next(error)
     }
 }
 
@@ -55,7 +55,7 @@ const signIn = async(req, res , next) => {
 
     }
     catch(error){
-        next()
+        next(error)
     }
 }
 
