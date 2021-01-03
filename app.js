@@ -6,12 +6,10 @@ const { notFound, errorHandler } = require('./src/middlewares/error')
 const helmet = require('helmet');
 const app = express();
 
-app.use(express.static('./public'));
 app.use('/uploads', express.static('uploads'));
 
 const authRoute = require('./src/api/authentication')
 const memeRoute = require('./src/api/meme')
-
 
 app.use(express.json());
 app.use(helmet());

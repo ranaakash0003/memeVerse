@@ -12,14 +12,9 @@ const userSchema = yup.object().shape({
 const memeSchema = yup.object().shape({
     title: yup.string().min(2).required(),
     image: yup.string().required(),
-    postedBy: yup.string()
-                .required(),
-
-    likes: yup.number()
-              .positive()
-              .integer(),
-
-    comment: yup.string().max(800),
+    postedBy: yup.string().required(),
+    likes: yup.array(yup.string()),
+    comment: yup.array(yup.string().max(800)),
     
 })
 

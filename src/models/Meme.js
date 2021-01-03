@@ -12,10 +12,8 @@ const memeSchema = new mongoose.Schema({
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     likes:[
         {
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User'
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
       }
     ],
     comments: [

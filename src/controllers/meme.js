@@ -1,7 +1,6 @@
 const { memeSchema } = require('../validators')
 const Meme = require('../models/Meme')
 
-
 const getAllMeme = async(req, res, next) => {
     try{
         const memes = await Meme.find()
@@ -15,7 +14,6 @@ const getAllMeme = async(req, res, next) => {
 
 const addMeme = async (req, res, next) => {
     try{
-        console.log(req.authUser);
         const newMeme = {
             title: req.body.title,
             image: req.file.path,
@@ -40,16 +38,47 @@ const addMeme = async (req, res, next) => {
     }
 }
 
-// const like = async (req, res, next) => {
-//     // todo next
-// }
+const reactMeme = async (req, res, next) => {
+   try{
+    const id = req.authUser.id
+    let meme = await Meme.findById(req.params.id)
+    
+    if( !meme.likes.includes(id)){
+        meme.likes.push(id)
+    }
+    else{
+        meme.likes = meme.likes.filter((userId) => userId.toString() !== id.toString())
+    }
+    await memeSchema.validate(meme, { abortEarly: false })
+    await Meme.findByIdAndUpdate(req.params.id, meme)
+    return res.status(200).send({ success: true, message:'liked successfully', meme })
+   }
+   catch (error) {
+    next(error)
+}
+}
 
-// const disLike = async (req, res, next) => {
-//     // todo next
-// }
+const commentMeme = async (req, res, next) => {
+    try{
+        const id = req.authUser.id
+        let meme = await Meme.findById(req.params.id)
+        if(!meme){
+            return res.status(200).send({ success: true, message:'meme not found' })
+        }
 
-// const comment = async (req, res, next) => {
-//     // todo next
-// }
+        const newComment = {
+            user: id,
+            text: req.body.text,
+        }
+        
+        meme.comments.push(newComment)
+        
+        await Meme.findByIdAndUpdate(req.params.id, meme)
+        return res.status(200).send({ success: true, message:'comment successfull', meme })
+       }
+       catch (error) {
+        next(error)
+    }
+}
 
-module.exports = { getAllMeme, addMeme  }
+module.exports = { getAllMeme, addMeme, reactMeme, commentMeme  }
